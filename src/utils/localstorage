@@ -1,0 +1,4 @@
+export const getCodeBlocksOnStorage = (storage) => {
+    const codeInputs = storage.getItem('codeInputs')
+    return codeInputs !== null ? JSON.parse(codeInputs) : []
+}

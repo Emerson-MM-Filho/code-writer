@@ -1,0 +1,5 @@
+.codeBlock {
+    background-color: red;
+    padding: 0.6rem;
+    display: flex;
+}
