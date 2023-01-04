@@ -1,5 +1,13 @@
 .codeBlock {
-    background-color: red;
-    padding: 0.6rem;
     display: flex;
+    justify-content: center;
+    color: rgb(255, 255, 255);
+}
+
+.isdragging {
+    background: rgb(65, 175, 65);
+}
+
+.notdragging {
+    background: rgb(233, 233, 233);
 }

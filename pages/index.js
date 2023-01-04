@@ -15,6 +15,16 @@ export default function Home() {
     setCodeBlocks(savedBlocks)
   }, [])
 
+  const getOrderedCodeBlocks = () => {
+    const copyCodeBlocks = [...codeBlocks]
+    copyCodeBlocks.sort(
+      (first, second) => {
+        return first.index < second.index ? -1 : 1
+      }
+    );
+    return copyCodeBlocks
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -32,7 +42,7 @@ export default function Home() {
       }
       <div className={styles.codeBlocks}>
         {
-          codeBlocks.map(({id, value}) => {
+          getOrderedCodeBlocks().map(({id, value}) => {
             return <CodeBlock key={id} codeId={id} code={value}/>
           })
         }

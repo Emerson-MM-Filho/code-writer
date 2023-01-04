@@ -3,6 +3,7 @@ import BaseModal from '../BaseModal'
 import CodeInput from '../CodeInput'
 import { getCodeBlocksOnStorage } from '../../utils/localstorage'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import styles from './styles.module.css'
 
 
 export default function SettingsModal({stateController}) {
@@ -55,19 +56,36 @@ export default function SettingsModal({stateController}) {
     const onDragEnd = (result) => {
         if (!result.destination) return;
         const { source, destination } = result;
-      
-        const codeInputsCopy = [...codeInputs];
+
+        const codeInputsCopy = [...getOrderedCodeBlocks()];
+        console.log(codeInputsCopy)
         const [selected] = codeInputsCopy.splice(source.index, 1);
-        console.log(selected)
-        // copiedItems.splice(destination.index, 0, removed);
-        // setColumns({
-        //     ...columns,
-        //     [source.droppableId]: {
-        //         ...column,
-        //         items: copiedItems
-        //     }
-        // });
+
+        codeInputsCopy.splice(destination.index, 0, selected);
+        const sortedCodeBlocks = sortCodeInputs(codeInputsCopy)
+        setCodeInputs(sortedCodeBlocks);
+        localStorage.setItem('codeInputs', JSON.stringify(sortedCodeBlocks))
       };
+
+      const sortCodeInputs = (changedCodeInputs) => {
+        const copyCodeBlocks = [...changedCodeInputs]
+        copyCodeBlocks.sort(
+          (first, second) => {
+            return first.index < second.index ? -1 : 1
+          }
+        );
+        return copyCodeBlocks
+      }
+
+      const getOrderedCodeBlocks = () => {
+        const copyCodeBlocks = [...codeInputs]
+        copyCodeBlocks.sort(
+          (first, second) => {
+            return first.index < second.index ? -1 : 1
+          }
+        );
+        return copyCodeBlocks
+      }
 
     return (
         <BaseModal
@@ -82,18 +100,11 @@ export default function SettingsModal({stateController}) {
                     {(provided, snapshot) => {
                         return (
                             <div
+                                className={`${styles.container} ${snapshot.isDraggingOver ? styles.isdragging : styles.notdragging}`}
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}
-                                style={{
-                                    background: snapshot.isDraggingOver
-                                    ? "lightblue"
-                                    : "lightgrey",
-                                    padding: 4,
-                                    width: 250,
-                                    minHeight: 500
-                                }}
                             >
-                            {codeInputs.map(({id, index, value}) => (
+                            {getOrderedCodeBlocks().map(({id, index, value}) => (
                                 <CodeInput
                                     key={id}
                                     codeId={id}
